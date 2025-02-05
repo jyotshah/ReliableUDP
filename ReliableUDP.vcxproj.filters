@@ -23,5 +23,13 @@
     <ClCompile Include="Example.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="makefile">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
