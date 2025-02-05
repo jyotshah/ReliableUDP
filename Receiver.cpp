@@ -10,3 +10,32 @@ File : Receiver.cpp
 #include <cstring>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+
+#define PORT 8080
+#define BUFFER_SIZE 1024
+
+void recieveFile(SOCKET socket,sockaddr_in senderAddr){
+    int senderAddrCount = sizeof(senderAddr);
+
+    while(true){
+        char fileName[256] = {0};
+        int recievedbytes = recvfrom(socket, fileName, sizeof(fileName), 0, (sockaddr*)&senderAddr, &senderAddrCount);
+
+        if(recievedBytes == SOCKET_ERROR){
+            std::cerr << "ERROR RECEIVING FILE NAME.\n";
+            break;
+        }
+
+        if(strcmp(fileName, "END")==0){
+            std::cout << "ALL THE FILES HAVE BEN RECIEVED. \n";
+            break;
+        }
+
+        std::cout << "RECEIVING FILE: " <<fileName << std::endl;
+
+        int main(){
+
+            return ;
+        }
+    }
+}
