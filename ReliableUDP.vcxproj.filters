@@ -15,19 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Downloads\reliable_udp (2)\b0a6ed4433ab23be380ef27d562bfd99-31764e24f724f7f69a99880c50eb4a2b834e698f\Net.h">
+    <ClInclude Include="Net.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Downloads\reliable_udp (2)\b0a6ed4433ab23be380ef27d562bfd99-31764e24f724f7f69a99880c50eb4a2b834e698f\Example.cpp">
+    <ClCompile Include="Example.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Downloads\reliable_udp (2)\b0a6ed4433ab23be380ef27d562bfd99-31764e24f724f7f69a99880c50eb4a2b834e698f\Test.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\..\Downloads\reliable_udp (2)\b0a6ed4433ab23be380ef27d562bfd99-31764e24f724f7f69a99880c50eb4a2b834e698f\makefile" />
   </ItemGroup>
 </Project>

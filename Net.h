@@ -1,4 +1,3 @@
-#pragma once
 /*
 	Simple Network Library from "Networking for Game Programmers"
 	http://www.gaffer.org/networking-for-game-programmers
@@ -7,7 +6,7 @@
 
 #ifndef NET_H
 #define NET_H
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <cstring> // for memcpy
 
 // platform detection
@@ -203,7 +202,7 @@ namespace net
 			address.sin_addr.s_addr = INADDR_ANY;
 			address.sin_port = htons((unsigned short)port);
 
-			if (bind(socket, (const sockaddr*)&address, sizeof(sockaddr_in)) < 0)
+			if (::bind(socket, (const sockaddr*)&address, sizeof(sockaddr_in)) < 0)
 			{
 				printf("failed to bind socket\n");
 				Close();
@@ -439,24 +438,39 @@ namespace net
 			}
 		}
 
+		int packetCounter = 0;
+
 		virtual bool SendPacket(const unsigned char data[], int size)
 		{
+			const int PacketSize = 256;
+			const int PacketSizeHack = PacketSize + 128;
+
 			assert(running);
 			if (address.GetAddress() == 0)
 				return false;
-			unsigned char packet[size + 4];
+			unsigned char packet[PacketSizeHack + 4];
+
+			char message[PacketSizeHack];
+			snprintf(message, sizeof(message), "Hello World %d", packetCounter++);
+
 			packet[0] = (unsigned char)(protocolId >> 24);
 			packet[1] = (unsigned char)((protocolId >> 16) & 0xFF);
 			packet[2] = (unsigned char)((protocolId >> 8) & 0xFF);
 			packet[3] = (unsigned char)((protocolId) & 0xFF);
-			std::memcpy(&packet[4], data, size);
+			std::memcpy(&packet[4], message, std::strlen(message) + 1);
+
+			printf("Hello World <%s>", message);
+
 			return socket.Send(address, packet, size + 4);
 		}
 
 		virtual int ReceivePacket(unsigned char data[], int size)
 		{
+			const int PacketSize = 256;
+			const int PacketSizeHack = PacketSize + 128;
+
 			assert(running);
-			unsigned char packet[size + 4];
+			unsigned char packet[PacketSizeHack + 4];
 			Address sender;
 			int bytes_read = socket.Receive(sender, packet, size + 4);
 			if (bytes_read == 0)
@@ -970,7 +984,7 @@ namespace net
 			}
 #endif
 			const int header = 12;
-			unsigned char packet[header + size];
+			unsigned char* packet = new unsigned char[header + size];
 			unsigned int seq = reliabilitySystem.GetLocalSequence();
 			unsigned int ack = reliabilitySystem.GetRemoteSequence();
 			unsigned int ack_bits = reliabilitySystem.GenerateAckBits();
@@ -987,7 +1001,7 @@ namespace net
 			const int header = 12;
 			if (size <= header)
 				return false;
-			unsigned char packet[header + size];
+			unsigned char* packet = new unsigned char[header + size];
 			int received_bytes = Connection::ReceivePacket(packet, size + header);
 			if (received_bytes == 0)
 				return false;
