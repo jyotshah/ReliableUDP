@@ -18,6 +18,16 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Downloads\reliable_udp (2)\b0a6ed4433ab23be380ef27d562bfd99-31764e24f724f7f69a99880c50eb4a2b834e698f\Net.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Downloads\reliable_udp (2)\b0a6ed4433ab23be380ef27d562bfd99-31764e24f724f7f69a99880c50eb4a2b834e698f\Example.cpp" />
+    <ClCompile Include="..\..\..\..\..\Downloads\reliable_udp (2)\b0a6ed4433ab23be380ef27d562bfd99-31764e24f724f7f69a99880c50eb4a2b834e698f\Test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\Downloads\reliable_udp (2)\b0a6ed4433ab23be380ef27d562bfd99-31764e24f724f7f69a99880c50eb4a2b834e698f\makefile" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -126,9 +136,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="ReliableUDP.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
