@@ -70,13 +70,13 @@ int main(){
 
     SOCKET socketInfo = socket(AF_INET, SOCK_DGRAM, 0);
     if(!socketInfo){
-        std::cerr <<"ERROR CREATING SOCKET."
+        std::cerr <<"ERROR CREATING SOCKET.";
         return 1;
     }
 
     std::cout << "WAITING FOR INCOMING FILES...\n";
     sockaddr_in senderAddress;
-    receiveFile(socketInfo, senderAddress);
+    recieveFile(socketInfo, senderAddress);
 
     closesocket(socketInfo);
     return 0;
