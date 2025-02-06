@@ -33,9 +33,37 @@ void recieveFile(SOCKET socket,sockaddr_in senderAddr){
 
         std::cout << "RECEIVING FILE: " <<fileName << std::endl;
 
-        int main(){
+        int fileSize;
+        recvfrom(socket, (char*)&fileSize, sizeof(fileSize),0 ,&senderAddr, &senderAddrCount);
+        
+        fileSize = abs(fileSize); 
 
-            return ;
+        std::ofstream outputFile(fileName, std::ios::binary);
+        if (!outputFile) {
+            std::cerr << "ERROR CREATING FILE: " << fileName << std::endl;
+            break;
+        }
+
+        int main(){
+            WSADATA wsaData;
+            if (WSAStartup(MAKEWORD(2,2), &wsaData)!= 0){
+                std::cerr << "FAILED TO INITIALIZE SOCK. \n";
+                WSACleanup();
+                return 1;
+            }
+            
+            SOCKET socketInfo = socket(AF_INET, SOCK_DGRAM, 0);
+            if(!socketInfo){
+                std::cerr <<"ERROR CREATING SOCKET."
+                return 1;
+            }
+
+            std::cout << "WAITING FOR INCOMING FILES...\n";
+            sockaddr_in senderAddress;
+            receiveFile(socketInfo, senderAddress);
+
+            closesocket(socketInfo);
+            return 0;
         }
     }
 }
