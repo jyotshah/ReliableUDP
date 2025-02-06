@@ -21,7 +21,7 @@ void recieveFile(SOCKET socket,sockaddr_in senderAddr){
         char fileName[256] = {0};
         int recievedbytes = recvfrom(socket, fileName, sizeof(fileName), 0, (sockaddr*)&senderAddr, &senderAddrCount);
 
-        if(recievedBytes == SOCKET_ERROR){
+        if(recievedbytes == SOCKET_ERROR){
             std::cerr << "ERROR RECEIVING FILE NAME.\n";
             break;
         }
@@ -47,31 +47,37 @@ void recieveFile(SOCKET socket,sockaddr_in senderAddr){
         char buffer[BUFFER_SIZE];
         int bytesReceived = 0;
         while (bytesReceived <= fileSize){
+            int chunkSize = recvfrom(socket, buffer, BUFFER_SIZE, 0, (sockaddr*)&senderAddr, &senderAddrCount);
+            if (chunkSize == SOCKET_ERROR) 
+            break;
+            outputFile.write(buffer, chunkSize);
+            bytesReceived += chunkSize;
 
+            float progress = (float)bytesReceived / fileSize * 100;
+            std::cout << "TRANSFER PROGRESS: " << progress << "%\r";
+            std::cout.flush();
         }
     }
 }
 
-        int main(){
-            WSADATA wsaData;
-            if (WSAStartup(MAKEWORD(2,2), &wsaData)!= 0){
-                std::cerr << "FAILED TO INITIALIZE SOCK. \n";
-                WSACleanup();
-                return 1;
-            }
-
-            SOCKET socketInfo = socket(AF_INET, SOCK_DGRAM, 0);
-            if(!socketInfo){
-                std::cerr <<"ERROR CREATING SOCKET."
-                return 1;
-            }
-
-            std::cout << "WAITING FOR INCOMING FILES...\n";
-            sockaddr_in senderAddress;
-            receiveFile(socketInfo, senderAddress);
-
-            closesocket(socketInfo);
-            return 0;
-        }
+int main(){
+    WSADATA wsaData;
+    if (WSAStartup(MAKEWORD(2,2), &wsaData)!= 0){
+        std::cerr << "FAILED TO INITIALIZE SOCK. \n";
+        WSACleanup();
+        return 1;
     }
+
+    SOCKET socketInfo = socket(AF_INET, SOCK_DGRAM, 0);
+    if(!socketInfo){
+        std::cerr <<"ERROR CREATING SOCKET."
+        return 1;
+    }
+
+    std::cout << "WAITING FOR INCOMING FILES...\n";
+    sockaddr_in senderAddress;
+    receiveFile(socketInfo, senderAddress);
+
+    closesocket(socketInfo);
+    return 0;
 }
