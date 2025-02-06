@@ -44,6 +44,14 @@ void recieveFile(SOCKET socket,sockaddr_in senderAddr){
             break;
         }
 
+        char buffer[BUFFER_SIZE];
+        int bytesReceived = 0;
+        while (bytesReceived <= fileSize){
+
+        }
+    }
+}
+
         int main(){
             WSADATA wsaData;
             if (WSAStartup(MAKEWORD(2,2), &wsaData)!= 0){
@@ -51,7 +59,7 @@ void recieveFile(SOCKET socket,sockaddr_in senderAddr){
                 WSACleanup();
                 return 1;
             }
-            
+
             SOCKET socketInfo = socket(AF_INET, SOCK_DGRAM, 0);
             if(!socketInfo){
                 std::cerr <<"ERROR CREATING SOCKET."
