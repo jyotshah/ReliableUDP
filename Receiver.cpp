@@ -8,41 +8,16 @@ File : Receiver.cpp
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include <winsock2.h>
-#include <ws2tcpip.h>
+#include <vector>
+#include<string>
+#include <openssl/md5.h>
 
-#define PORT 8080
-#define BUFFER_SIZE 1024
+using namespace std;
+using namespace net;
 
-void recieveFile(SOCKET socket,sockaddr_in senderAddr){
-    int senderAddrCount = sizeof(senderAddr);
+const int ServerPort = 30000;
+const int ProtocolId = 0x11223344;
 
-    while(true){
-        char fileName[256] = {0};
-        int recievedbytes = recvfrom(socket, fileName, sizeof(fileName), 0, (sockaddr*)&senderAddr, &senderAddrCount);
-
-        if(recievedbytes == SOCKET_ERROR){
-            std::cerr << "ERROR RECEIVING FILE NAME.\n";
-            break;
-        }
-
-        if(strcmp(fileName, "END")==0){
-            std::cout << "ALL THE FILES HAVE BEN RECIEVED. \n";
-            break;
-        }
-
-        std::cout << "RECEIVING FILE: " <<fileName << std::endl;
-
-        int fileSize;
-        recvfrom(socket, (char*)&fileSize, sizeof(fileSize),0 ,&senderAddr, &senderAddrCount);
-        
-        fileSize = abs(fileSize); 
-
-        std::ofstream outputFile(fileName, std::ios::binary);
-        if (!outputFile) {
-            std::cerr << "ERROR CREATING FILE: " << fileName << std::endl;
-            break;
-        }
 
         char buffer[BUFFER_SIZE];
         int bytesReceived = 0;
@@ -57,27 +32,27 @@ void recieveFile(SOCKET socket,sockaddr_in senderAddr){
             std::cout << "TRANSFER PROGRESS: " << progress << "%\r";
             std::cout.flush();
         }
-    }
-}
 
 int main(){
-    WSADATA wsaData;
-    if (WSAStartup(MAKEWORD(2,2), &wsaData)!= 0){
-        std::cerr << "FAILED TO INITIALIZE SOCK. \n";
-        WSACleanup();
+    ReliableConnection connection(0x11223344, 10.0f);
+    if (!connection.Start(ServerPort)) {
+        cout << "FAILED TO START SERVER " << ServerPort << "\n";
         return 1;
     }
+    cout << "WAITING FOR FILE TRANSFER...\n";
+    vector<unsigned char> receivedData;
+    
+    bool receiving = true;
+    string expectedMD5;
 
-    SOCKET socketInfo = socket(AF_INET, SOCK_DGRAM, 0);
-    if(!socketInfo){
-        std::cerr <<"ERROR CREATING SOCKET.";
-        return 1;
+    while (receiving){
+        unsigned char packet[PacketSize];
+        int bytesRead = connection.ReceivePacket(packet, sizeof(packet));
+        if (bytesRead > 0){
+
+        } else{
+
+        }
     }
 
-    std::cout << "WAITING FOR INCOMING FILES...\n";
-    sockaddr_in senderAddress;
-    recieveFile(socketInfo, senderAddress);
-
-    closesocket(socketInfo);
-    return 0;
 }
