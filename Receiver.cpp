@@ -10,7 +10,6 @@ File : Receiver.cpp
 #include <vector>
 #include<string>
 #include "Net.h"
-#include <openssl/md5.h>
 
 using namespace std;
 using namespace net;
@@ -19,9 +18,7 @@ const int ServerPort = 30000;
 const int ProtocolId = 0x11223344;
 const int PacketSize = 1024;
 
-string computeMD5(){
 
-}
 int main(){
     ReliableConnection connection(0x11223344, 10.0f);
     if (!connection.Start(ServerPort)) {
@@ -32,7 +29,6 @@ int main(){
     vector<unsigned char> receivedData;
 
     bool receiving = true;
-    string expectedMD5;
 
     while (receiving){
         unsigned char packet[PacketSize];
@@ -40,7 +36,6 @@ int main(){
         if (bytesRead > 0){
             string packetStr(reinterpret_cast<char*>(packet), bytesRead);
             if (packetStr.rfind("EOF:",0) == 0) { 
-                expectedMD5 = packetStr.substr(4); 
                 receiving == false; 
             }
             else{
@@ -48,13 +43,9 @@ int main(){
             }
         } 
     }
-        string receivedMD5 = computeMD5(receivedData);
-        if(receivedMD5 == expectedMD5){
             ofstream outFile("received_file", ios::binary);
             outFile.write(reinterpret_cast<const char*>(&receivedData[0]), receivedData.size());
-            cout << "File received successfully! Saved as 'received_file'.\n";
-        } else {
+            printf("File received successfully! Saved as 'received_file'.\n");
 
-        }
 
 }
